@@ -229,12 +229,37 @@ Role **`ADMIN`** obrigatória, via `requireRole` existente (`[09:36] Larissa`). 
 Erros: `404 WEBHOOK_DEAD_LETTER_NOT_FOUND`, `401 UNAUTHORIZED`, `403 FORBIDDEN` (role
 insuficiente).
 
-### 6.6 Demais endpoints de configuração (resumo)
+### 6.6 `PATCH /api/v1/webhooks/:id` — editar configuração
+
+Autenticado. Atualização parcial de `url`, `subscribedStatuses` e/ou `active` (`[09:33] Bruno`).
+
+Request (campos opcionais):
+```json
+{
+  "url": "https://cliente.example.com/webhooks/oms-v2",
+  "subscribedStatuses": ["PAID", "SHIPPED", "DELIVERED"],
+  "active": true
+}
+```
+Response `200 OK` (a `secret` **não** é retornada):
+```json
+{
+  "data": {
+    "id": "9a1c7b33-...",
+    "customerId": "a0f1...",
+    "url": "https://cliente.example.com/webhooks/oms-v2",
+    "subscribedStatuses": ["PAID", "SHIPPED", "DELIVERED"],
+    "active": true,
+    "updatedAt": "2026-07-21T12:30:00Z"
+  }
+}
+```
+Erros: `404 WEBHOOK_NOT_FOUND`, `422 WEBHOOK_URL_NOT_HTTPS`, `422 WEBHOOK_INVALID_STATUS_FILTER`.
+
+### 6.7 Demais endpoints de configuração (resumo)
 
 - `GET /api/v1/webhooks?customerId=&page=&pageSize=` → `200` lista paginada (a `secret` **não**
   é retornada) (`[09:33] Bruno`).
-- `PATCH /api/v1/webhooks/:id` → `200` edita `url`, `subscribedStatuses`, `active`
-  (`[09:33] Bruno`).
 - `DELETE /api/v1/webhooks/:id` → `204 No Content` (`[09:33] Bruno`).
 
 ## 7. Matriz de erros (`WEBHOOK_*`)
